@@ -1,8 +1,8 @@
 # Proyecto de grado GITSIGHT PRO
 
 ## Autores
-Alejandro Ahogado Prieto (a.ahogado@uniandes.edu.co)
-Juan Sebastián Hoyos Muñoz (js.hoyosm@uniandes.edu.co)
+- Alejandro Ahogado Prieto (a.ahogado@uniandes.edu.co)
+- Juan Sebastián Hoyos Muñoz (js.hoyosm@uniandes.edu.co)
 
 ## Descripción
 
