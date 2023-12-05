@@ -27,6 +27,8 @@ Este repositorio contiene el código desarrollado como parte de la tesis GITSIGH
 - Finalmente, ejecute el archivo "start_server.sh" encontrado en la raíz del proyecto. (En bash ejecute ./start_server.sh)*
   - Si quiere finalizar el proceso en git bash usa ctrl+c
 
+- Una vez se finalice el proceso de descarga de datos, ejecute el archivo de tableau para ver el dashboard correspondiente. 
+
 *Es importante tener en cuenta que siempre que se inicie la aplicación desde cero al ejecutar este archivo, se limpiará la base de datos, por lo que en la consola se le pedirá indicar la clave asignada a la base de datos. Cuando no se detiene por completo la aplicación y se realizan nuevos análisis, este procedimiento se realiza automáticamente.
 
 Dependiendo de su sistema operativo y configuración es posible que deba brindar ciertos permisos para poder ejecutar la aplicación.
