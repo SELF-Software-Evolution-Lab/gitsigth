@@ -25,7 +25,7 @@ Este repositorio contiene el código desarrollado como parte de la tesis GITSIGH
      - pip install -r requirements.txt
 
 - Finalmente, ejecute el archivo "start_server.sh" encontrado en la raíz del proyecto. (En bash ejecute ./start_server.sh)*
-  - Si quiere finalizar el proceso en git bash usa ctrl+c
+  - Si quiere finalizar el proceso en git bash use ctrl+c
 
 - Una vez se finalice el proceso de descarga de datos, ejecute el archivo de tableau para ver el dashboard correspondiente. 
 
