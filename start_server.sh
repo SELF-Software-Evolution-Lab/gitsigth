@@ -13,7 +13,7 @@ fi
 
 # Iniciar el servidor en segundo plano
 echo "Iniciando el servidor..."
-uvicorn main:app --reload &
+uvicorn main:app --reload --host 0.0.0.0 --port 8000 &
 
 # Esperar hasta que config.json exista
 while true; do

@@ -10,5 +10,8 @@ jinja2==3.0.3
 python-multipart==0.0.6
 requests
 pandas
+itsdangerous
+
 
 #pydantic== v1.10.0a1
+

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/static/gitsight-logo-fondo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gitsight Pro</title>
+  <link rel="stylesheet" type="text/css" href="/static/styles.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+</head>
+<body>
+  {% if user_authenticated %}
+  <div class="menuBarras">
+    <img src="/static/menu.png" alt="menu" height="30" onclick="window.location.href='/menu'">
+  </div>
+  {% endif %}
+  <div class="ve" style="font-size: 130%;">
+    <span style="color: #AA55FF; font-weight: bold;">/</span> GITSIGHT PRO <span style="color: #AA55FF; font-weight: bold;">/</span>
+  </div>
+  <div class="pagina">
+    <div class="c1">
+        <div class="menu" style="font-size: 150%; padding: 7% 0% 0% 7%;">
+            <button style="border:none; background: transparent; font-weight: bolder; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/'">Homepage</button>
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/aboutus'">About us</button>
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/gitsight'"><u>Gitsight Pro</u> </button>
+            {% if user_authenticated %}
+            <button id="logout-button" style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;">Sign Out </button>
+            {% else %}
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/signin'">Sign In </button>
+            {% endif %}
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script>
+          $("#logout-button").click(function() {
+                logout();
+            });
+
+            function deleteAllCookies() {
+            var cookies = document.cookie.split(";");
+            var paths = ["/", "/repo-info", "/signin"]; 
+            var domain = window.location.hostname;
+
+            cookies.forEach(cookie => {
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+
+                paths.forEach(path => {
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=" + path + ";domain=" + domain;
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=" + path;
+                });
+            });
+        }
+
+        function logout() {
+            fetch('/logout')
+            .then(response => {
+                if (response.ok) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    deleteAllCookies();
+                    if ('caches' in window) {
+                        caches.keys().then(function(names) {
+                            for (let name of names) caches.delete(name);
+                        });
+                    }
+                    window.location.href = 'https://github.com/logout';
+                }
+            });
+        }
+        </script>
+        <div class="tool">
+           <b> Git<br>Sight<br>Pro<br><span style="color: #AA55FF;">/</span></b><br>productivity<br>analysis
+        </div>
+    </div>
+    <div style="text-align: center; font-size: 150%; font-weight: bold; color: #AA55FF; margin-top: 3%;">
+      What is?
+  </div>
+  
+    <div style="margin: 5%; text-align: justify;">
+        The Colombian context has witnessed impressive growth in the software industry in recent years, becoming a fundamental pillar in the country's economy. However, during the pandemic, companies in this sector faced significant challenges regarding the productivity of their software development teams due to the abrupt transition to remote or hybrid work environments.<br><br>
+        Gitsight Pro emerges to address this issue, designed to extract data from repository activity on platforms such as GitHub. This tool focuses on metrics like the quantity of contributions and the average time to resolve issues per user, among others. Additionally, it facilitates the visualization of this data in an understandable manner through tools like Tableau, enabling users to conduct detailed analyses and make informed decisions to enhance their team's productivity.<br><br>
+        It is crucial to highlight various facets of productivity, and Gitsight Pro specifically focuses on efficiency in repositories (coding) within the context of software development. Some key dimensions of productivity include code efficiency, effective team collaboration, efficient time management, code quality, and the ability to meet established deadlines. Therefore, it is important to understand that Gitsight Pro helps us evaluate a small portion of a development team's productivity.<br><br><br>
+        
+        <em>Gitsight Pro is part of the research 'Changes in the Productivity of Development Teams Post-Pandemic,' developed by the same contributors.<br></em><br>
+    </div>
+   
+  </div>
+</body>
+</html>

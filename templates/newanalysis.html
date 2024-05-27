@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/static/gitsight-logo-fondo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>New Analysis</title>
+  <link rel="stylesheet" type="text/css" href="/static/styles.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+</head>
+<body>
+    {% if user_authenticated %}
+  <div class="menuBarras">
+    <img src="/static/menu.png" alt="menu" height="30" onclick="window.location.href='/menu'">
+  </div>
+  <div class="ve" style="font-size: 130%;">
+    <span style="color: #AA55FF; font-weight: bold;">/</span> GITSIGHT PRO <span style="color: #AA55FF; font-weight: bold;">/</span>
+  </div>
+  <div class="pagina" style="padding-bottom: 3%;">
+    <div class="c1">
+        <div class="menu" style="font-size: 150%; padding: 7% 0% 0% 7%;">
+            <button style="border:none; background: transparent; font-weight: bolder; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/'">Homepage</button>
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/aboutus'">About us </button>
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/gitsight'">Gitsight Pro </button>
+            {% if user_authenticated %}
+            <button id="logout-button" style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;">Sign Out </button>
+            {% else %}
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/signin'">Sign In </button>
+            {% endif %}
+        </div>
+        <div class="tool">
+           <b> Git<br>Sight<br>Pro<br><span style="color: #AA55FF;">/</span></b><br>productivity<br>analysis
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script>
+          $("#logout-button").click(function() {
+                logout();
+            });
+
+            function deleteAllCookies() {
+            var cookies = document.cookie.split(";");
+            var paths = ["/", "/repo-info", "/signin"]; 
+            var domain = window.location.hostname;
+
+            cookies.forEach(cookie => {
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+
+                paths.forEach(path => {
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=" + path + ";domain=" + domain;
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=" + path;
+                });
+            });
+        }
+
+        function logout() {
+            fetch('/logout')
+            .then(response => {
+                if (response.ok) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    deleteAllCookies();
+                    if ('caches' in window) {
+                        caches.keys().then(function(names) {
+                            for (let name of names) caches.delete(name);
+                        });
+                    }
+                    window.location.href = 'https://github.com/logout';
+                }
+            });
+        }
+        </script>
+    <div class="mid" style="margin-top: 10%; margin-bottom: 10%;">
+        <div class="signin" style="font-size: 150%; text-align: center;">New analysis</div>
+        <div style="margin-top: 4%; margin-bottom: 4%;">Start analyzing repositories now!</div>
+        <div class="btn">
+            <button style="border:none; background: #AA55FF; font-weight: bolder; color: #ffffff; font-size: 100%; margin: 5%; width: 300px; height: 40px;" onclick="window.location.href='/repo-info?new_analysis=true'">
+            Get started
+            </button>
+        </div>
+    </div>      
+  </div>
+  {% else%}
+  <div>Not logged in</div>
+  {% endif %}
+</body>
+</html>

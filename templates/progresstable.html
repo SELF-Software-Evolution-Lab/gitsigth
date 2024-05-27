@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/static/gitsight-logo-fondo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Progress</title>
+  <link rel="stylesheet" type="text/css" href="/static/styles.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+</head>
+<body>
+  {% if user_authenticated %}
+  <div class="menuBarras">
+    <img src="/static/menu.png" alt="menu" height="30" onclick="window.location.href='/menu'">
+  </div>
+  <div class="ve" style="font-size: 130%;">
+    <span style="color: #AA55FF; font-weight: bold;">/</span> GITSIGHT PRO <span style="color: #AA55FF; font-weight: bold;">/</span>
+  </div>
+  <div class="pagina">
+    <div class="c1">
+        <div class="menu" style="font-size: 150%; padding: 7% 0% 0% 7%;">
+            <button style="border:none; background: transparent; font-weight: bolder; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/'"><u>Homepage</u></button>
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/aboutus'">About us </button>
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/gitsight'">Gitsight Pro </button>
+            {% if user_authenticated %}
+            <button id="logout-button" style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;">Sign Out </button>
+            {% else %}
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/signin'">Sign In </button>
+            {% endif %}
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script>
+          $("#logout-button").click(function() {
+                logout();
+            });
+
+            function deleteAllCookies() {
+            var cookies = document.cookie.split(";");
+            var paths = ["/", "/repo-info", "/signin"]; 
+            var domain = window.location.hostname;
+
+            cookies.forEach(cookie => {
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+
+                paths.forEach(path => {
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=" + path + ";domain=" + domain;
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=" + path;
+                });
+            });
+        }
+
+        function logout() {
+            fetch('/logout')
+            .then(response => {
+                if (response.ok) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    deleteAllCookies();
+                    if ('caches' in window) {
+                        caches.keys().then(function(names) {
+                            for (let name of names) caches.delete(name);
+                        });
+                    }
+                    window.location.href = 'https://github.com/logout';
+                }
+            });
+        }
+
+                $(document).ready(function() {
+            var progressBar = $("#progress-bar");
+            var progressMessage = $("#progress-message");
+            var progressPercentage = $("#progress-percentage");
+            var CancelBtn = $("#cancel-btn");
+            var nextBtn = $("#next-btn");
+            var closeBtn = $("#close-btn");
+
+            function updateProgressBar() {
+                $.get("/get-progress", function(data) {
+                    console.log(" data recibida:", data);
+                    progressBar.css("width", data.progress + "%");
+                    progressPercentage.text(data.progress + "%");
+                    progressMessage.text(data.message);
+                    // Si el progreso no ha llegado al 100%, sigue actualizando
+                    if (data.progress < 100) {
+                        setTimeout(updateProgressBar, 1000);
+                    } else {
+                        // Si el progreso llegó al 100%, muestra el botón para iniciar un nuevo análisis
+                        nextBtn.show();
+                        closeBtn.show();
+                        CancelBtn.hide();
+                    }
+                });
+            }
+
+            // Da inicio a la actualización de la barra de progreso al cargar la página
+            updateProgressBar();
+        });
+        </script>
+        <div class="tool">
+           <b> Git<br>Sight<br>Pro<br><span style="color: #AA55FF;">/</span></b><br>productivity<br>analysis
+        </div>
+    </div>
+    <table class="analysis-progress" style="margin: 10% 10% 15% 25%;">
+        <thead>
+            <tr>
+                <th>Repository</th>
+                <th>Analysis status</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td >1</td>
+                <td id="progress-percentage"></td>
+                <td onclick="window.location.href='/progress'" style="cursor: pointer;"><span class="view-icon">&#128065;</span></td>
+            </tr>
+        </tbody>
+    </table> 
+    <div class="ar" style="color: #f6f6f6;">:D</div>
+  </div>
+  {% else%}
+  <div>Not logged in</div>
+  {% endif %}
+</body>
+</html>
+
+

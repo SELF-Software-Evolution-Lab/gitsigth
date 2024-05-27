@@ -1,0 +1,205 @@
+body {
+    background-color: #ffffff; 
+    font-family: 'Montserrat', sans-serif; 
+    margin: 0; 
+    padding: 0; 
+}
+
+.menu {
+    display: flex; 
+    justify-content: space-around; 
+    align-items: center; 
+}
+
+.menu div {
+    font-weight: bold; 
+    color: #AA55FF;
+    padding: 10px; 
+}
+
+.c1 {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.tool{
+    margin-right: 10%;
+    margin-top: 3%;
+}
+
+.pagina {
+    width: calc(100% - (8% + 3%)); 
+    height: calc(100% - (3% + 3%));
+    margin: 3% 3% 3% 8%; 
+    background-color: #F6F6F6; 
+}
+
+.paginaMenu {
+    width: calc(100% - (8% + 3%)); 
+    height: calc(100% - (3% + 3%));
+    margin: 3% 3% 3% 8%; 
+    background-color:  #AA55FF; 
+}
+
+.prueba{
+    margin-top: 32%;
+    color: #AA55FF;
+}
+.menuItems{
+    font-size: 400%;
+}
+.c2 {
+    width: calc(75% - 8% - 3%); 
+    height: calc(100% - 3% - 3%); 
+    margin: 5% 3% 0% 8%; 
+    background-color: #AA55FF; 
+}
+
+.menuBarras{
+    position: absolute;
+    margin-left: 2.3%;
+    margin-top: 7.6%;
+}
+
+.ve {
+    position: absolute; 
+    top: 70%; 
+    left: 3%; /* Lo posiciona al principio del margen izquierdo */
+    transform: translate(-50%, -50%) rotate(-90deg); /* Rotación y centrado */
+}
+.cimg {
+    position: absolute;
+    margin-left: 63%;
+    margin-top: 8%;
+   
+}
+
+.image {
+    position: absolute;
+}
+
+.signin {
+    font-weight: bold; /* Hace que el texto sea negrita */
+    color: #AA55FF; /* Establece el color del texto */
+    padding: 10px; /* Añade espacio alrededor del texto */
+  }
+
+  .mid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    margin: 10% auto;
+    padding: 20px;
+    border: 2px solid #AA55FF;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.btnGit {
+    filter: invert(100%);
+    width: 40px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.btn button {
+    border: none;
+    background: #AA55FF;
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    border: 2px solid #AA55FF;
+    padding: 20px;
+    max-width: 600px;
+    margin: 5% auto;
+}
+.header {
+    background-color: #AA55FF;
+    color: white;
+    padding: 20px;
+    position: relative;
+    align-items: center;
+}
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+.header img {
+    position: absolute;
+    height: 150px;
+    margin-left: 80%;
+}
+.header p {
+    margin: 10px 0 0 0;
+}
+.steps {
+    margin-top: 20px;
+}
+.steps h2 {
+    color: #AA55FF;
+    margin-bottom: 10px;
+}
+.steps ol {
+    padding-left: 20px;
+}
+.steps ol li {
+    margin-bottom: 10px;
+}
+.steps ol li span {
+    color: #AA55FF;
+}
+.steps ol li .server-info {
+    padding: 10px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #AA55FF;
+    margin: 5%;
+}
+.steps ol li .server-info p {
+    margin: 5px 0;
+}
+
+.analysis-progress {
+    font-family: Arial, sans-serif;
+    width: 100%;
+    max-width: 600px;
+    border-style: solid;
+    border-color: #AA55FF;
+    border-width: 3px;
+   
+}
+.analysis-progress thead {
+    background-color: #AA55FF;
+    color: white;
+}
+.analysis-progress th, .analysis-progress td {
+    padding: 10px;
+    text-align: center;
+}
+.analysis-progress th {
+    border-bottom: 2px solid #AA55FF;
+}
+.analysis-progress tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.analysis-progress tbody tr:hover {
+    background-color: #f1f1f1;
+}
+.view-icon {
+    font-size: 1.5em;
+    color: #000;
+}
+
+.ar{
+    color:f6f6f6; 
+    margin-bottom: 5%;
+}

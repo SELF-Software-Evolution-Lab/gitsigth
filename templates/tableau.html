@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/static/gitsight-logo-fondo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tableau</title>
+  <link rel="stylesheet" type="text/css" href="/static/styles.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+</head>
+<body>
+  {% if user_authenticated %}
+  <div class="menuBarras">
+    <img src="/static/menu.png" alt="menu" height="30" onclick="window.location.href='/menu'">
+  </div>
+  <div class="ve" style="font-size: 130%;">
+    <span style="color: #AA55FF; font-weight: bold;">/</span> GITSIGHT PRO <span style="color: #AA55FF; font-weight: bold;">/</span>
+  </div>
+  <div class="pagina">
+    <div class="c1">
+        <div class="menu" style="font-size: 150%; padding: 7% 0% 0% 7%;">
+            <button style="border:none; background: transparent; font-weight: bolder; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/'"><u>Homepage</u></button>
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/aboutus'">About us </button>
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/gitsight'">Gitsight Pro </button>
+            {% if user_authenticated %}
+            <button id="logout-button" style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;">Sign Out </button>
+            {% else %}
+            <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/signin'">Sign In </button>
+            {% endif %}
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script>
+          $("#logout-button").click(function() {
+                logout();
+            });
+
+            function deleteAllCookies() {
+            var cookies = document.cookie.split(";");
+            var paths = ["/", "/repo-info", "/signin"]; 
+            var domain = window.location.hostname;
+
+            cookies.forEach(cookie => {
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+
+                paths.forEach(path => {
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=" + path + ";domain=" + domain;
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=" + path;
+                });
+            });
+        }
+
+        function logout() {
+            fetch('/logout')
+            .then(response => {
+                if (response.ok) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    deleteAllCookies();
+                    if ('caches' in window) {
+                        caches.keys().then(function(names) {
+                            for (let name of names) caches.delete(name);
+                        });
+                    }
+                    window.location.href = 'https://github.com/logout';
+                }
+            });
+        }
+        </script>
+        <div class="tool">
+           <b> Git<br>Sight<br>Pro<br><span style="color: #AA55FF;">/</span></b><br>productivity<br>analysis
+        </div>
+    </div>
+    <div class="container">
+        <div class="header">
+            <div style="font-family: 'Times New Roman', Times, serif; font-size: 300%; color:#f6f6f6; padding: 5%; font-weight: bold;">Visualize the information with Tableau</div>
+            <img src="static/Tableau.png" alt="Tableau Logo">
+            <div style="padding: 5%; color: #000;">Tableau Desktop is used for visualizing and analyzing data. It allows you to create interactive charts, dashboards, and data visualizations that will help you interact with analyzed data effectively.</div>
+        </div>
+        <div class="steps">
+            <h2>Steps</h2>
+            <ol>
+                <li>Download Tableau Desktop and log in to your personal account.</li>
+                <li>In the Connect tab, click on PostgreSQL in the To a Server section.</li>
+                <li>In the window that opens, fill in the fields with the corresponding values:
+                    <div class="server-info">
+                        <p><span>Server:</span> localhost</p>
+                        <p><span>Port:</span> 5432</p>
+                        <p><span>Database:</span> datamining_db</p>
+                        <p><span>Username:</span> postgres</p>
+                        <p><span>Password:</span> 1234</p>
+                    </div>
+                </li>
+                <li>Done! You will be able to visualize the data from the repository you just analyzed in whatever way suits you best thanks to the variety of charts offered by Tableau.</li>
+            </ol>
+        </div>
+        <button style="border:none; background: #AA55FF; font-weight: bolder; color: #ffffff; font-size: 100%; margin: 5%; width: 150px; height: 35px;" onclick="window.location.href='/'">Close</button> 
+    </div> 
+  </div>
+  {% else%}
+  <div>Not logged in</div>
+  {% endif %}
+</body>
+</html>
+

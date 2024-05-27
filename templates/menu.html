@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/static/gitsight-logo-fondo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Menu</title>
+  <link rel="stylesheet" type="text/css" href="/static/styles.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+</head>
+<body>
+  {% if user_authenticated %}
+  <div class="menuBarras">
+    <img src="/static/menu.png" alt="menu" height="30" onclick="goBack()">
+  </div>
+  
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+  <div class="paginaMenu">
+    <div class="menuItems">
+        <button style="border:none; background: transparent; font-weight: bolder; color: #f6f6f6; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/newanalysis'">new analysis</button><br>
+        <button style="border:none; background: transparent; font-weight: bolder; color: #f6f6f6; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/progressTable'">progress </button>
+    </div>
+    <div class="prueba">hi</div>
+  </div>
+  {% else %}
+  <div>Not logged in</div>
+  {% endif %}
+</body>
+</html>

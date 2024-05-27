@@ -2,19 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/static/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Progress</title>
+    <link rel="icon" href="/static/gitsight-logo-fondo.png" />
+    <title>Progress</title>
     <link rel="stylesheet" type="text/css" href="/static/progress.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
 </head>
 <body>
-    <div id="gitsight-pro-title">GITSIGHT PRO</div>
+    {% if user_authenticated %}
+  <div class="menuBarras">
+    <img src="/static/menu.png" alt="menu" height="30" onclick="window.location.href='/menu'">
+  </div>
+    
+    <div class="ve" style="font-size: 130%;">
+        <span style="color: #AA55FF; font-weight: bold;">/</span> GITSIGHT PRO <span style="color: #AA55FF; font-weight: bold;">/</span>
+      </div>
+      <div class="pagina" style="padding-bottom: 3%;">
+        <div class="c1">
+            <div class="menu" style="font-size: 150%; padding: 7% 0% 0% 7%;">
+                <button style="border:none; background: transparent; font-weight: bolder; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/'">Homepage</button>
+                <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/aboutus'">About us </button>
+                <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/gitsight'">Gitsight Pro </button>
+                {% if user_authenticated %}
+                <button id="logout-button" style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;">Sign Out </button>
+                {% else %}
+                <button style="border:none; background: transparent; font-weight: bold; color: #AA55FF; font-size: 100%; padding-left: 25px;" onclick="window.location.href='/signin'">Sign In </button>
+                {% endif %}
+            </div>
+            <div class="tool">
+               <b> Git<br>Sight<br>Pro<br><span style="color: #AA55FF;">/</span></b><br>productivity<br>analysis
+            </div>
+        </div>
     <div id="progress-container">
         <h2>Download Progress</h2>
         <div id="progress-bar"></div>
         <div id="progress-message"></div>
         <div id="progress-percentage"></div>
-        <button id="new-analysis-btn" onclick="window.location.href='/repo-info?new_analysis=true'">New Analysis</button>
+        <button id="next-btn" onclick="window.location.href='/tableau'">What´s next?</button>
+        <button id="close-btn" onclick="window.location.href='/repo-info?new_analysis=true'">Close</button>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
@@ -22,7 +47,8 @@
             var progressBar = $("#progress-bar");
             var progressMessage = $("#progress-message");
             var progressPercentage = $("#progress-percentage");
-            var newAnalysisBtn = $("#new-analysis-btn");
+            var nextBtn = $("#next-btn");
+            var closeBtn = $("#close-btn");
 
             function updateProgressBar() {
                 $.get("/get-progress", function(data) {
@@ -35,7 +61,8 @@
                         setTimeout(updateProgressBar, 1000);
                     } else {
                         // Si el progreso llegó al 100%, muestra el botón para iniciar un nuevo análisis
-                        newAnalysisBtn.show();
+                        nextBtn.show();
+                        closeBtn.show();
                     }
                 });
             }
@@ -43,6 +70,48 @@
             // Da inicio a la actualización de la barra de progreso al cargar la página
             updateProgressBar();
         });
+
+          $("#logout-button").click(function() {
+                logout();
+            });
+
+            function deleteAllCookies() {
+            var cookies = document.cookie.split(";");
+            var paths = ["/", "/repo-info", "/signin"]; 
+            var domain = window.location.hostname;
+
+            cookies.forEach(cookie => {
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+
+                paths.forEach(path => {
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=" + path + ";domain=" + domain;
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=" + path;
+                });
+            });
+        }
+
+        function logout() {
+            fetch('/logout')
+            .then(response => {
+                if (response.ok) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    deleteAllCookies();
+                    if ('caches' in window) {
+                        caches.keys().then(function(names) {
+                            for (let name of names) caches.delete(name);
+                        });
+                    }
+                    window.location.href = 'https://github.com/logout';
+                }
+            });
+        }
     </script>
+    {% else %}
+    <div>Not logged in</div>
+    {% endif %}
 </body>
 </html>
+
+

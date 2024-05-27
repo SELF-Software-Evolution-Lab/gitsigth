@@ -1,11 +1,10 @@
 import asyncio
 import os
 import subprocess
-import threading
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.param_functions import Form
 import httpx
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 import controllers, models, schemas
@@ -14,7 +13,9 @@ from typing import List
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import json
-from fastapi import BackgroundTasks
+from starlette.responses import RedirectResponse
+import os
+from fastapi import FastAPI, HTTPException
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -27,6 +28,7 @@ app.add_middleware(
     allow_methods=["*"],  # Permite todos los métodos, se puede especificar: ["GET", "POST"]
     allow_headers=["*"],  
 )
+
 
 # Dependency
 def get_db():
@@ -41,6 +43,8 @@ def get_db():
 app.mount("/static", StaticFiles(directory="assets"), name="static")
 
 templates = Jinja2Templates(directory="templates")
+
+
 
 # New Analysis
 class AnalysisState:
@@ -281,31 +285,66 @@ def read_commit_by_issue(issue_id: int, db: Session = Depends(get_db)):
 # Ruta de vista principal
 @app.get("/")
 async def login(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    user_authenticated = request.cookies.get('session') == 'true'
+    print(user_authenticated)
+    return templates.TemplateResponse("home.html", {"request": request, "user_authenticated": user_authenticated})
+
+
+@app.get("/signin")
+async def login(request: Request):
+   return templates.TemplateResponse("signin.html", {"request": request})
+
+@app.get("/menu")
+async def menu(request: Request):
+    user_authenticated = request.cookies.get('session') == 'true'
+    return templates.TemplateResponse("menu.html", {"request": request, "user_authenticated": user_authenticated})
+
+@app.get("/tableau")
+async def tableau(request: Request):
+    user_authenticated = request.cookies.get('session') == 'true'
+    return templates.TemplateResponse("tableau.html", {"request": request, "user_authenticated": user_authenticated})
+
+@app.get("/progressTable")
+async def progresstable(request: Request):
+    user_authenticated = request.cookies.get('session') == 'true'
+    return templates.TemplateResponse("progresstable.html", {"request": request, "user_authenticated": user_authenticated})
+
+@app.get("/aboutus")
+async def aboutus(request: Request):
+    user_authenticated = request.cookies.get('session') == 'true'
+    return templates.TemplateResponse("aboutus.html", {"request": request, "user_authenticated": user_authenticated})
+
+@app.get("/gitsight")
+async def gitsight(request: Request):
+    user_authenticated = request.cookies.get('session') == 'true'
+    return templates.TemplateResponse("gitsight.html", {"request": request, "user_authenticated": user_authenticated})
+
+@app.get("/newanalysis")
+async def newanalysis(request: Request):
+    user_authenticated = request.cookies.get('session') == 'true'
+    return templates.TemplateResponse("newanalysis.html", {"request": request, "user_authenticated": user_authenticated})
 
 #Ruta de autenticacion
 @app.get("/github-login")
 async def github_login():
     # Redirigir a la página de inicio de sesión de GitHub
-    github_auth_url = "https://github.com/login/oauth/authorize?client_id=e9ebb07c3b330ccadf1c&scope=user"
+    github_auth_url = "https://github.com/login/oauth/authorize?client_id=Ov23liFBIUFKFNEIksxA&scope=user"
     return RedirectResponse(url=github_auth_url)
 
 # Define la URL de autorización y otros valores
-GITHUB_CLIENT_ID = "e9ebb07c3b330ccadf1c"
-GITHUB_CLIENT_SECRET = "31292aaab1032c10d9f6e8874c1e8764417bf844"
+GITHUB_CLIENT_ID = "Ov23liFBIUFKFNEIksxA"
+GITHUB_CLIENT_SECRET = "0463dadf273ab0469d5ce705802ceda0ccb75da4"
 GITHUB_REDIRECT_URI = "http://localhost:8000/callback"
 GITHUB_ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token"
 GITHUB_USER_INFO_URL = "https://api.github.com/user"
 
 @app.get("/callback")
-async def github_callback(request: Request):
-    # Obtiene el código de autorización de la URL de redirección
+async def github_callback(request: Request, response: Response):
     code = request.query_params.get("code")
     
     if not code:
         raise HTTPException(status_code=400, detail="Código de autorización no encontrado")
 
-    # Configura los datos que se enviarán en la solicitud POST para obtener el token de acceso
     data = {
         "client_id": GITHUB_CLIENT_ID,
         "client_secret": GITHUB_CLIENT_SECRET,
@@ -313,30 +352,28 @@ async def github_callback(request: Request):
         "redirect_uri": GITHUB_REDIRECT_URI,
     }
 
-    # Realiza la solicitud POST a la URL de autorización de GitHub
     async with httpx.AsyncClient() as client:
-        response = await client.post(GITHUB_ACCESS_TOKEN_URL, data=data)
+        github_response = await client.post(GITHUB_ACCESS_TOKEN_URL, data=data)
 
-    if response.status_code != 200:
+    if github_response.status_code != 200:
         raise HTTPException(status_code=400, detail="No se pudo obtener el token de acceso")
 
-    # La respuesta de GitHub contendrá el token de acceso
-    token_data = response.text
+    token_data = github_response.text
     access_token = token_data.split("&")[0].split("=")[1]
 
-    # Guardar login del usuario
     async with httpx.AsyncClient() as client:
-        response = await client.get(GITHUB_USER_INFO_URL, headers={"Authorization": f"token {access_token}"})
-    user_data = response.json()
+        user_response = await client.get(GITHUB_USER_INFO_URL, headers={"Authorization": f"token {access_token}"})
+    user_data = user_response.json()
 
-    # Guardar login y token del usuario 
     token_data = {"gh_user": user_data["login"], "gh_token": access_token}
 
     with open("config.json", "w") as json_file:
         json.dump(token_data, json_file)
 
-    # Redirigir a una página de éxito 
-    return RedirectResponse(url="/repo-info")
+    response = RedirectResponse(url="/repo-info")
+    response.set_cookie(key="session", value="true")
+    return response
+
 
 def run_data_abstraction():
     try:
@@ -401,7 +438,11 @@ async def form_data(
 @app.get("/repo-info")
 async def form(request: Request, new_analysis: bool = False):
     analysis_state.is_new_analysis = new_analysis
-    return templates.TemplateResponse("repo-info.html", {"request": request, "new_analysis": new_analysis})
+    #user_authenticated = get_gh_token() is not None
+    #return templates.TemplateResponse("repo-info.html", {"request": request,"user_authenticated": user_authenticated, "new_analysis": new_analysis})
+    user_authenticated = request.cookies.get('session') == 'true'
+    print(user_authenticated)
+    return templates.TemplateResponse("repo-info.html", {"request": request, "user_authenticated": user_authenticated, "new_analysis": new_analysis})
 
 
 def get_gh_token():
@@ -423,9 +464,27 @@ async def ruta_protegida(token: str = Depends(get_gh_token)):
 
 @app.get("/progress")
 async def progress(request: Request):
-    return templates.TemplateResponse("progress.html", {"request": request})
+    user_authenticated = request.cookies.get('session') == 'true'
+    return templates.TemplateResponse("progress.html", {"request": request, "user_authenticated": user_authenticated})
 
 @app.get("/get-progress")
 async def get_progress(db: Session = Depends(get_db)):
     progress = controllers.get_latest_progress(db)
     return {"progress": progress.percentage, "message": progress.message}
+
+#@app.get("/get-progress")
+#async def get_progress(db: Session = Depends(get_db)):
+ #   progress = controllers.get_latest_progress(db)
+  #  return {
+   #     "progress": progress["percentage"],
+    #    "message": progress["message"],
+     #   "repository_name": progress["repository_name"]
+    #}
+
+
+@app.get("/logout")
+async def logout(response: Response):
+    response = JSONResponse(content={"message": "Logged out successfully"})
+    response.delete_cookie(key="session")
+    return response
+
