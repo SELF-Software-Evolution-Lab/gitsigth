@@ -14,7 +14,7 @@
 - Una vez realizado lo anterior, desde su terminal ubiquese en el directorio que contiene todos los archivos de gitsight.
   Ejemplo:
      - cd Downloads\gitsigth-main-docker\gitsigth-main
-     - 
+       
 - Finalmente, ejecute el siguiente comando:
   - docker compose up
 
