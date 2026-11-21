@@ -2,7 +2,10 @@
 
 ## Autores
 - Alejandro Ahogado Prieto (a.ahogado@uniandes.edu.co)
-- Juan Sebastián Hoyos Muñoz (js.hoyosm@uniandes.edu.co)
+- Juan Sebastián Hoyos Muñoz (js.hoyosm@uniandes.edu.co
+
+## Asesora
+- Kelly Garcés
 
 ## Descripción
 
